@@ -1,10 +1,12 @@
 package tubular;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -62,10 +64,9 @@ public class TubularHelper {
 
 			for (GridColumn column : request.Columns) {
 				try {
-					innerList.add(item.getClass().getField(column.Name)
-							.get(item));
-				} catch (IllegalArgumentException | IllegalAccessException
-						| NoSuchFieldException | SecurityException e) {
+					innerList.add(BeanUtils.getProperty(item, column.Name));
+				} catch (IllegalAccessException | InvocationTargetException
+						| NoSuchMethodException e) {
 					e.printStackTrace();
 				}
 			}
